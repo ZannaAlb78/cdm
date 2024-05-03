@@ -1,0 +1,55 @@
+{
+    "palette":{
+        "primary": {
+            "main": "#e3211a"
+        }
+    },
+    "custom": {
+        "landingPage": {
+            "active": false
+        },
+        "appBar": {
+            "logo": "/site/public/images/logo_milano.png", 
+            "logoHeight": 50,
+            "logoWidth": "auto",
+            "background": "#e3211a",
+            "activeBackground": "#731a17"
+
+        },
+        "leftMenu": {
+            "background": "#e3211a",
+            "leftMenuActive": "#e08784",
+            "leftMenuActiveSubmenu": "#731a17"
+        },
+        "infoBar": {
+            "listGridSelectedColor": "#e3211a"
+        },
+        "tagCloud": {
+            "active": true,
+            "colorOptions": {
+                "luminosity": "dark",
+                "hue": "red"
+            },
+            "leftMenu": { 
+                "background": "#e08784",
+                "color": "black"
+            }
+        },
+        "footer": {
+
+            "active":"true",
+
+            "text":"Piattaforma Ecosistema Digitale Urbano | © 2024 Comune di Milano | Progetto cofinanziato dall'Unione Europea - Fondi Strutturali di Investimento Europei - Programma Operativo Città Metropolitane 2014-2020
+
+            Finanziato nell'ambito della risposta dell'Unione alla pandemia COVID-19 | Il sito utilizza cookie tecnici.",
+
+            "color":"#CBCBCB",
+
+            "background":"#000",
+
+            "height":"50px"
+
+        }
+    }
+}
+
