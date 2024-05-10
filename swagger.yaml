@@ -1,0 +1,4357 @@
+openapi: 3.0.3
+info:
+  title: Redmine API
+  contact:
+    name: Ufficio Gestione Architettura Interoperabilità
+    url: 'https://apisp.comune.milano.it'
+  version: 4.1.1
+externalDocs:
+  description: Redmine API Official Developer Guide
+  url: 'https://www.redmine.org/projects/redmine/wiki/Rest_api'
+servers:
+  - url: 'https://api.comune.milano.it/ALM/Redmine/4.1.1'
+security:
+  - default: []
+tags:
+  - name: Issues
+    description: 'Status: Stable, Availablity: 1.0'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Issues'
+  - name: Projects
+    description: 'Status: Stable, Availablity: 1.0'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Projects'
+  - name: Project Memberships
+    description: 'Status: Alpha, Availablity: 1.4'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Memberships'
+  - name: Users
+    description: 'Status: Stable, Availablity: 1.1'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users'
+  - name: Time Entries
+    description: 'Status: Stable, Availablity: 1.1'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries'
+  - name: News
+    description: >-
+      Status: Prototype, Note: Prototype implementation for index only,
+      Availablity: 1.1
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_News'
+  - name: Issue Relations
+    description: 'Status: Alpha, Availablity: 1.3'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations'
+  - name: Versions
+    description: 'Status: Alpha, Availablity: 1.3'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Versions'
+  - name: Wiki Pages
+    description: 'Status: Alpha, Availablity: 2.2'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages'
+  - name: Queries
+    description: 'Status: Alpha, Availablity: 1.3'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Queries'
+  - name: Attachments
+    description: >-
+      Status: Beta, Notes: Adding attachments via the API added in 1.4,
+      Availablity: 1.3
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Attachments'
+  - name: Issue Statuses
+    description: 'Status: Alpha, Notes: Provides the list of all statuses, Availablity: 1.3'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses'
+  - name: Trackers
+    description: 'Status: Alpha, Notes: Provides the list of all trackers, Availablity: 1.3'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Trackers'
+  - name: Enumerations
+    description: >-
+      Status: Alpha, Notes: Provides the list of issue priorities and time
+      tracking activities, Availablity: 2.2
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations'
+  - name: Issue Categories
+    description: 'Status: Alpha, Availablity: 1.3'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories'
+  - name: Roles
+    description: 'Status: Alpha, Availablity: 1.4'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Roles'
+  - name: Groups
+    description: 'Status: Alpha, Availablity: 2.1'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups'
+  - name: Custom Fields
+    description: 'Status: Alpha, Availablity: 2.4'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields'
+  - name: Search
+    description: 'Status: Alpha, Availablity: 3.3'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Search'
+  - name: Files
+    description: 'Status: Alpha, Availablity: 3.4'
+    externalDocs:
+      url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Files'
+paths:
+  '/issues.{format}':
+    get:
+      tags:
+        - Issues
+      summary: Listing issues
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Listing-issues
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/limit'
+        - name: sort
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: include
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+            enum:
+              - attachments
+              - relations
+        - name: issue_id
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: project_id
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: subproject_id
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: tracker_id
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+        - name: status_id
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: assigned_to_id
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: parent_id
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: cf_x
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - issues
+                  - limit
+                  - offset
+                  - total_count
+                type: object
+                properties:
+                  issues:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Issue'
+                        - required:
+                            - spent_hours
+                            - total_spent_hours
+                          type: object
+                          properties:
+                            spent_hours:
+                              type: number
+                            total_spent_hours:
+                              type: number
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    post:
+      tags:
+        - Issues
+      summary: Creating an issue
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Creating-an-issue
+      parameters:
+        - $ref: '#/components/parameters/format'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - issue
+              type: object
+              properties:
+                issue:
+                  required:
+                    - project_id
+                    - status_id
+                    - subject
+                    - tracer_id
+                  type: object
+                  properties:
+                    project_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    tracker_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    status_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    priority_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    subject:
+                      type: string
+                    description:
+                      type: string
+                      nullable: true
+                    start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    due_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    category_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    fixed_version_id:
+                      type: string
+                    assigned_to_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    parent_issue_id:
+                      oneOf:
+                        - type: integer
+                          nullable: true
+                        - type: string
+                          nullable: true
+                    custom_fields:
+                      type: string
+                    watcher_user_ids:
+                      type: array
+                      items:
+                        oneOf:
+                          - type: integer
+                          - type: string
+                    is_private:
+                      type: boolean
+                    estimated_hours:
+                      oneOf:
+                        - type: integer
+                          nullable: true
+                        - type: string
+                          nullable: true
+                    uploads:
+                      type: object
+                      properties:
+                        upload:
+                          type: object
+                          properties:
+                            token:
+                              type: string
+                            filename:
+                              type: string
+                            description:
+                              type: string
+                            content_type:
+                              type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                required:
+                  - issue
+                type: object
+                properties:
+                  issue:
+                    $ref: '#/components/schemas/Issue'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/issues/{issue_id}.{format}':
+    get:
+      tags:
+        - Issues
+      summary: Showing an issue
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Showing-an-issue
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_id'
+        - name: include
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+            enum:
+              - children
+              - attachments
+              - relations
+              - changesets
+              - journals
+              - watchers
+              - allowed_statuses
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - required:
+                      - issue
+                    type: object
+                    properties:
+                      issue:
+                        $ref: '#/components/schemas/Issue'
+                  - required:
+                      - issue
+                    type: object
+                    properties:
+                      issue:
+                        $ref: '#/components/schemas/IssuePartial'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    put:
+      tags:
+        - Issues
+      summary: Updating an issue
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Updating-an-issue
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                issue:
+                  type: object
+                  properties:
+                    project_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    tracker_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    status_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    priority_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    subject:
+                      type: string
+                    description:
+                      type: string
+                      nullable: true
+                    start_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    due_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    category_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    fixed_version_id:
+                      type: string
+                    assigned_to_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    parent_issue_id:
+                      oneOf:
+                        - type: integer
+                          nullable: true
+                        - type: string
+                          nullable: true
+                    custom_fields:
+                      type: string
+                    is_private:
+                      type: boolean
+                    estimated_hours:
+                      oneOf:
+                        - type: integer
+                          nullable: true
+                        - type: string
+                          nullable: true
+                    notes:
+                      type: string
+                    private_notes:
+                      type: string
+      responses:
+        '204':
+          description: No entity
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    delete:
+      tags:
+        - Issues
+      summary: Deleting an issue
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Deleting-an-issue
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_id'
+      responses:
+        '204':
+          description: No entity
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/issues/{issue_id}/watchers.{format}':
+    post:
+      tags:
+        - Issues
+      summary: Adding a watcher
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Adding-a-watcher
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - user_id
+              type: object
+              properties:
+                user_id:
+                  oneOf:
+                    - type: integer
+                    - type: string
+      responses:
+        '204':
+          description: No entity
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/issues/{issue_id}/watchers/{user_id}.{format}':
+    delete:
+      tags:
+        - Issues
+      summary: Removing a watcher
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Issues#Removing-a-watcher
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_id'
+        - $ref: '#/components/parameters/user_id'
+      responses:
+        '204':
+          description: No entity
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/projects.{format}':
+    get:
+      tags:
+        - Projects
+      summary: Listing projects
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Listing-projects
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - name: include
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+            enum:
+              - trackers
+              - issue_categories
+              - enabled_modules
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - limit
+                  - offset
+                  - projects
+                  - total_count
+                type: object
+                properties:
+                  projects:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    post:
+      tags:
+        - Projects
+      summary: Creating a project
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Creating-a-project
+      parameters:
+        - $ref: '#/components/parameters/format'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - project
+              type: object
+              properties:
+                project:
+                  required:
+                    - identifier
+                    - name
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    identifier:
+                      type: string
+                    description:
+                      type: string
+                      nullable: true
+                    homepage:
+                      type: string
+                      nullable: true
+                    is_public:
+                      type: boolean
+                    parent_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    inherit_members:
+                      type: boolean
+                    default_assigned_to_id:
+                      type: string
+                    default_version_id:
+                      type: string
+                    tracker_ids:
+                      type: array
+                      items:
+                        oneOf:
+                          - type: integer
+                          - type: string
+                    enabled_module_names:
+                      type: array
+                      items:
+                        type: string
+                    issue_custom_field_ids:
+                      type: array
+                      items:
+                        oneOf:
+                          - type: integer
+                          - type: string
+                    custom_field_values:
+                      type: object
+                      additionalProperties:
+                        type: string
+                      example:
+                        '1': VALUE
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '422':
+          description: Unprocessable content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/projects/{project_id}.{format}':
+    get:
+      tags:
+        - Projects
+      summary: Showing a project
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Showing-a-project
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - name: include
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+            enum:
+              - trackers
+              - issue_categories
+              - enabled_modules
+              - time_entry_activities
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - required:
+                      - project
+                    type: object
+                    properties:
+                      project:
+                        $ref: '#/components/schemas/Project'
+                  - required:
+                      - project
+                    type: object
+                    properties:
+                      project:
+                        type: object
+                        properties:
+                          trackers:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdName'
+                          issue_categories:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdName'
+                          enabled_modules:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdName'
+                          time_entry_activities:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdName'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    put:
+      tags:
+        - Projects
+      summary: Updating a project
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Updating-a-project
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    homepage:
+                      type: string
+                    is_public:
+                      type: boolean
+                    parent_id:
+                      type: integer
+                    inherit_members:
+                      type: boolean
+                    default_assigned_to_id:
+                      type: string
+                    default_version_id:
+                      type: string
+                    tracker_ids:
+                      type: array
+                      items:
+                        oneOf:
+                          - type: integer
+                          - type: string
+                    enabled_module_names:
+                      type: array
+                      items:
+                        type: string
+                    issue_custom_field_ids:
+                      type: array
+                      items:
+                        oneOf:
+                          - type: integer
+                          - type: string
+                    custom_field_values:
+                      type: object
+                      additionalProperties:
+                        type: string
+                      example:
+                        '1': VALUE
+      responses:
+        '204':
+          description: No entity
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    delete:
+      tags:
+        - Projects
+      summary: Deleting a project
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Deleting-a-project
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '204':
+          description: No entity
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/projects/{project_id}/archive.{format}':
+    put:
+      tags:
+        - Projects
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Archiving-a-project
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '204':
+          description: No entity
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/projects/{project_id}/unarchive.{format}':
+    put:
+      tags:
+        - Projects
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_Projects#Unarchiving-a-project
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '204':
+          description: No entity
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/projects/{project_id}/memberships.{format}':
+    get:
+      tags:
+        - Project Memberships
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - limit
+                  - memberships
+                  - offset
+                  - total_count
+                type: object
+                properties:
+                  memberships:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Membersip'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    post:
+      tags:
+        - Project Memberships
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#POST'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - membership
+              type: object
+              properties:
+                membership:
+                  required:
+                    - role_ids
+                    - user_id
+                  type: object
+                  properties:
+                    user_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    role_ids:
+                      type: array
+                      items:
+                        oneOf:
+                          - type: integer
+                          - type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                required:
+                  - membership
+                type: object
+                properties:
+                  membership:
+                    $ref: '#/components/schemas/Membersip'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/memberships/{membership_id}.{format}':
+    get:
+      tags:
+        - Project Memberships
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#GET-2'
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/membership_id'
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - membership
+                type: object
+                properties:
+                  membership:
+                    $ref: '#/components/schemas/Membersip'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    put:
+      tags:
+        - Project Memberships
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#PUT'
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/membership_id'
+        - $ref: '#/components/parameters/format'
+      responses:
+        '204':
+          description: No entity
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    delete:
+      tags:
+        - Project Memberships
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Memberships#DELETE'
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/membership_id'
+        - $ref: '#/components/parameters/format'
+      responses:
+        '204':
+          description: No entity
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/users.{format}':
+    get:
+      tags:
+        - Users
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - name: status
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+        - name: name
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: group_id
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - limit
+                  - offset
+                  - total_count
+                  - users
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    post:
+      tags:
+        - Users
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users#POST'
+      parameters:
+        - $ref: '#/components/parameters/format'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - user
+              type: object
+              properties:
+                user:
+                  required:
+                    - firstname
+                    - lastname
+                    - login
+                    - mail
+                  type: object
+                  properties:
+                    login:
+                      type: string
+                    password:
+                      type: string
+                    firstname:
+                      type: string
+                    lastname:
+                      type: string
+                    mail:
+                      type: string
+                    auth_source_id:
+                      type: integer
+                    mail_notification:
+                      type: boolean
+                    must_change_passwd:
+                      type: boolean
+                    generate_password:
+                      type: boolean
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    allOf:
+                      - $ref: '#/components/schemas/User'
+                      - $ref: '#/components/schemas/UserPartial'
+        '422':
+          description: Unbrocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/users/{user_id}.{format}':
+    get:
+      tags:
+        - Users
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET-2'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/user_id'
+        - name: include
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    allOf:
+                      - $ref: '#/components/schemas/User'
+                      - $ref: '#/components/schemas/UserPartial'
+                      - type: object
+                        properties:
+                          custom_fields:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdName'
+                          memberships:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                project:
+                                  type: string
+                                roles:
+                                  type: array
+                                  items:
+                                    $ref: '#/components/schemas/Role'
+                          groups:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdName'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    put:
+      tags:
+        - Users
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users#PUT'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/user_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - user
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    login:
+                      type: string
+                    password:
+                      type: string
+                    firstname:
+                      type: string
+                    lastname:
+                      type: string
+                    mail:
+                      type: string
+                    auth_source_id:
+                      type: integer
+                    mail_notification:
+                      type: boolean
+                    must_change_passwd:
+                      type: boolean
+                    generate_password:
+                      type: boolean
+                    admin:
+                      type: boolean
+      responses:
+        '204':
+          description: No Body
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    delete:
+      tags:
+        - Users
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users#DELETE'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/user_id'
+      responses:
+        '204':
+          description: No Entity
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/users/current.{format}':
+    get:
+      tags:
+        - Users
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Users#GET-2'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - name: include
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    allOf:
+                      - $ref: '#/components/schemas/User'
+                      - $ref: '#/components/schemas/UserPartial'
+                      - type: object
+                        properties:
+                          custom_fields:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdName'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/time_entries.{format}':
+    get:
+      tags:
+        - Time Entries
+      summary: Listing time entries
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Listing-time-entries
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/limit'
+        - name: user_id
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+        - name: project_id
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: spent_on
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - limit
+                  - offset
+                  - time_entries
+                  - total_count
+                type: object
+                properties:
+                  time_entries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TimeEntry'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    post:
+      tags:
+        - Time Entries
+      summary: Creating a time entry
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Creating-a-time-entry
+      parameters:
+        - $ref: '#/components/parameters/format'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  properties:
+                    time_entry:
+                      required:
+                        - hours
+                        - issue_id
+                      type: object
+                      properties:
+                        hours:
+                          oneOf:
+                            - type: number
+                            - type: string
+                        spent_on:
+                          type: string
+                          format: date
+                        activity_id:
+                          oneOf:
+                            - type: integer
+                            - type: string
+                        comments:
+                          type: string
+                        user_id:
+                          oneOf:
+                            - type: integer
+                            - type: string
+                - oneOf:
+                    - type: object
+                      properties:
+                        time_entry:
+                          required:
+                            - issue_id
+                          type: object
+                          properties:
+                            issue_id:
+                              oneOf:
+                                - type: integer
+                                - type: string
+                    - type: object
+                      properties:
+                        time_entry:
+                          required:
+                            - project_id
+                          type: object
+                          properties:
+                            project_id:
+                              oneOf:
+                                - type: integer
+                                - type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeEntry'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/time_entries/{time_entry_id}.{format}':
+    get:
+      tags:
+        - Time Entries
+      summary: Showing a time entry
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Showing-a-time-entry
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/time_entry_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeEntry'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    put:
+      tags:
+        - Time Entries
+      summary: Updating a time entry
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Updating-a-time-entry
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/time_entry_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  properties:
+                    time_entry:
+                      required:
+                        - hours
+                        - issue_id
+                      type: object
+                      properties:
+                        hours:
+                          oneOf:
+                            - type: number
+                            - type: string
+                        spent_on:
+                          type: string
+                          format: date
+                        activity_id:
+                          oneOf:
+                            - type: integer
+                            - type: string
+                        comments:
+                          type: string
+                        user_id:
+                          oneOf:
+                            - type: integer
+                            - type: string
+                - oneOf:
+                    - type: object
+                      properties:
+                        time_entry:
+                          required:
+                            - issue_id
+                          type: object
+                          properties:
+                            issue_id:
+                              oneOf:
+                                - type: integer
+                                - type: string
+                    - type: object
+                      properties:
+                        time_entry:
+                          required:
+                            - project_id
+                          type: object
+                          properties:
+                            project_id:
+                              oneOf:
+                                - type: integer
+                                - type: string
+      responses:
+        '204':
+          description: 'No entity {}'
+        '422':
+          description: Unprocessable content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    delete:
+      tags:
+        - Time Entries
+      summary: Deleting a time entry
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries#Deleting-a-time-entry
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/time_entry_id'
+      responses:
+        '204':
+          description: 'No entity {}'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/news.{format}':
+    get:
+      tags:
+        - News
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_News#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - limit
+                  - news
+                  - offset
+                  - total_count
+                type: object
+                properties:
+                  news:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/News'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/projects/{project_id}/news.{format}':
+    get:
+      tags:
+        - News
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_News#GET-2'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - limit
+                  - news
+                  - offset
+                  - total_count
+                type: object
+                properties:
+                  news:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/News'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/issues/{issue_id}/relations.{format}':
+    get:
+      tags:
+        - Issue Relations
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - relations
+                type: object
+                properties:
+                  relations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IssueRelation'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    post:
+      tags:
+        - Issue Relations
+      summary: POST
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#POST'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - relation
+              type: object
+              properties:
+                relation:
+                  required:
+                    - issue_to_id
+                    - relation_type
+                  type: object
+                  properties:
+                    issue_to_id:
+                      type: integer
+                    relation_type:
+                      type: string
+                      enum:
+                        - relates
+                        - duplicates
+                        - duplicated
+                        - blocks
+                        - blocked
+                        - precedes
+                        - follows
+                        - copied_to
+                        - copied_from
+                    delay:
+                      type: integer
+                      nullable: true
+      responses:
+        '201':
+          description: Created
+        '422':
+          description: Unprocessable content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/relations/{issue_relation_id}.{format}':
+    get:
+      tags:
+        - Issue Relations
+      summary: GET
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#GET-2
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_relation_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  relation:
+                    $ref: '#/components/schemas/IssueRelation'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    delete:
+      tags:
+        - Issue Relations
+      summary: DELETE
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_IssueRelations#DELETE
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_relation_id'
+      responses:
+        '204':
+          description: 'No entity {}'
+        '422':
+          description: Unprocessable content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/projects/{project_id}/versions.{format}':
+    get:
+      tags:
+        - Versions
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - versions
+                type: object
+                properties:
+                  versions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Version'
+                  total_count:
+                    type: integer
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    post:
+      tags:
+        - Versions
+      summary: POST
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Versions#POST'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - version
+              type: object
+              properties:
+                version:
+                  required:
+                    - name
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    status:
+                      type: string
+                      enum:
+                        - open
+                        - locked
+                        - closed
+                    sharing:
+                      type: string
+                      enum:
+                        - none
+                        - descendants
+                        - hierarchy
+                        - tree
+                        - system
+                    due_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    description:
+                      type: string
+                    wiki_page_title:
+                      type: string
+                      nullable: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Version'
+                  - type: object
+                    properties:
+                      estimated_hours:
+                        type: number
+                      spent_hours:
+                        type: number
+        '422':
+          description: Unprocessable content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/versions/{version_id}.{format}':
+    get:
+      tags:
+        - Versions
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Versions#GET-2'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/version_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - version
+                type: object
+                properties:
+                  version:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Version'
+                        - type: object
+                          properties:
+                            estimated_hours:
+                              type: number
+                            spent_hours:
+                              type: number
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    put:
+      tags:
+        - Versions
+      summary: PUT
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Versions#PUT'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/version_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                version:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    status:
+                      type: string
+                      enum:
+                        - open
+                        - locked
+                        - closed
+                    sharing:
+                      type: string
+                      enum:
+                        - none
+                        - descendants
+                        - hierarchy
+                        - tree
+                        - system
+                    due_date:
+                      type: string
+                      format: date
+                      nullable: true
+                    description:
+                      type: string
+                    wiki_page_title:
+                      type: string
+                      nullable: true
+      responses:
+        '204':
+          description: 'No entity {}'
+        '422':
+          description: Unprocessable content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    delete:
+      tags:
+        - Versions
+      summary: DELETE
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Versions#DELETE'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/version_id'
+      responses:
+        '204':
+          description: 'No entity {}'
+        '422':
+          description: Unprocessable content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/projects/{project_id}/wiki/index.{format}':
+    get:
+      tags:
+        - Wiki Pages
+      summary: Getting the pages list of a wiki
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-the-pages-list-of-a-wiki
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - wiki_pages
+                type: object
+                properties:
+                  wiki_pages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WikiPages'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/projects/{project_id}/wiki/{wiki_page_title}.{format}':
+    get:
+      tags:
+        - Wiki Pages
+      summary: Getting a wiki page
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-a-wiki-page
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/wiki_page_title'
+        - name: include
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+            enum:
+              - attachments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - wiki_page
+                type: object
+                properties:
+                  wiki_page:
+                    $ref: '#/components/schemas/WikiPage'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    put:
+      tags:
+        - Wiki Pages
+      summary: Creating or updating a wiki page
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Creating-or-updating-a-wiki-page
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/wiki_page_title'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                wiki_page:
+                  required:
+                    - text
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                    comments:
+                      type: string
+                    version:
+                      type: integer
+      responses:
+        '201':
+          description: Created
+        '204':
+          description: 'No entity {}'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '422':
+          description: Unprocessable content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    delete:
+      tags:
+        - Wiki Pages
+      summary: Deleting a wiki page
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Deleting-a-wiki-page
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/wiki_page_title'
+      responses:
+        '204':
+          description: 'No entity {}'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/projects/{project_id}/wiki/{wiki_page_title}/{version_id}.{format}':
+    get:
+      tags:
+        - Wiki Pages
+      summary: Getting an old version of a wiki page
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_WikiPages#Getting-an-old-version-of-a-wiki-page
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/wiki_page_title'
+        - $ref: '#/components/parameters/version_id'
+        - name: include
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+            enum:
+              - attachments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - wiki_page
+                type: object
+                properties:
+                  wiki_page:
+                    $ref: '#/components/schemas/WikiPage'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/queries.{format}':
+    get:
+      tags:
+        - Queries
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Queries#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - limit
+                  - offset
+                  - queries
+                  - total_count
+                type: object
+                properties:
+                  queries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Query'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/attachments/{attachment_id}.{format}':
+    get:
+      tags:
+        - Attachments
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/attachment_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  attachment:
+                    $ref: '#/components/schemas/Attachment'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    delete:
+      tags:
+        - Attachments
+      summary: DELETE
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#DELETE'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/attachment_id'
+      responses:
+        '204':
+          description: 'No entity {}'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    patch:
+      tags:
+        - Attachments
+      summary: PATCH
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Attachments#PATCH'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/attachment_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                attachment:
+                  type: object
+                  properties:
+                    filename:
+                      type: string
+                    description:
+                      type: string
+      responses:
+        '204':
+          description: 'No entity {}'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/issue_statuses.{format}':
+    get:
+      tags:
+        - Issue Statuses
+      summary: Returns possible Status Values for Issues
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueStatuses#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueStatuses'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/trackers.{format}':
+    get:
+      tags:
+        - Trackers
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Trackers#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trackers'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/projects/{project_id}/issue_categories.{format}':
+    get:
+      tags:
+        - Issue Categories
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - issue_categories
+                  - total_count
+                type: object
+                properties:
+                  issue_categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IssueCategory'
+                  total_count:
+                    type: integer
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    post:
+      tags:
+        - Issue Categories
+      summary: POST
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#POST
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - issue_category
+              type: object
+              properties:
+                issue_category:
+                  required:
+                    - name
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    assigned_to_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueCategory'
+        '422':
+          description: Unprocessable content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/enumerations/issue_priorities.{format}':
+    get:
+      tags:
+        - Enumerations
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - issue_priorities
+                type: object
+                properties:
+                  issue_priorities:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IssuePriority'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/enumerations/time_entry_activities.{format}':
+    get:
+      tags:
+        - Enumerations
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-2'
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - time_entry_activities
+                type: object
+                properties:
+                  time_entry_activities:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TimeEntryActivity'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/enumerations/document_categories.{format}':
+    get:
+      tags:
+        - Enumerations
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Enumerations#GET-3'
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - document_categories
+                type: object
+                properties:
+                  document_categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DocumentCategory'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/issue_categories/{issue_category_id}.{format}':
+    get:
+      tags:
+        - Issue Categories
+      summary: GET
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#GET-2
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_category_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - issue_category
+                type: object
+                properties:
+                  issue_category:
+                    $ref: '#/components/schemas/IssueCategory'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    put:
+      tags:
+        - Issue Categories
+      summary: PUT
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#PUT'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_category_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                issue_category:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    assigned_to_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+      responses:
+        '204':
+          description: 'No entity {}'
+        '422':
+          description: Unprocessable content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    delete:
+      tags:
+        - Issue Categories
+      summary: DELETE
+      externalDocs:
+        url: >-
+          https://www.redmine.org/projects/redmine/wiki/Rest_IssueCategories#DELETE
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/issue_category_id'
+        - name: reassign_to_id
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: 'No entity {}'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/roles.{format}':
+    get:
+      tags:
+        - Roles
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Roles#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IdName'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/roles/{role_id}.{format}':
+    get:
+      tags:
+        - Roles
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Roles#GET-2'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/role_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  role:
+                    $ref: '#/components/schemas/Role'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/groups.{format}':
+    get:
+      tags:
+        - Groups
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - groups
+                type: object
+                properties:
+                  groups:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IdName'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    post:
+      tags:
+        - Groups
+      summary: POST
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#POST'
+      parameters:
+        - $ref: '#/components/parameters/format'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    user_ids:
+                      type: array
+                      items:
+                        oneOf:
+                          - type: integer
+                          - type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    $ref: '#/components/schemas/IdName'
+        '422':
+          description: Unprocessable content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/groups/{group_id}.{format}':
+    get:
+      tags:
+        - Groups
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#GET-2'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/group_id'
+        - name: include
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+            enum:
+              - users
+              - memberships
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      group:
+                        $ref: '#/components/schemas/IdName'
+                  - type: object
+                    properties:
+                      group:
+                        type: object
+                        properties:
+                          users:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/IdName'
+                          memberships:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                project:
+                                  $ref: '#/components/schemas/IdName'
+                                roles:
+                                  type: array
+                                  items:
+                                    $ref: '#/components/schemas/IdName'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    put:
+      tags:
+        - Groups
+      summary: PUT
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#PUT'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/group_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    user_ids:
+                      type: array
+                      items:
+                        oneOf:
+                          - type: integer
+                          - type: string
+      responses:
+        '204':
+          description: 'No entity {}'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    delete:
+      tags:
+        - Groups
+      summary: DELETE
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#DELETE'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/group_id'
+      responses:
+        '204':
+          description: 'No entity {}'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/groups/{group_id}/users.{format}':
+    post:
+      tags:
+        - Groups
+      summary: POST
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#POST-2'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/group_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  oneOf:
+                    - type: integer
+                    - type: string
+      responses:
+        '204':
+          description: 'No entity {}'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/groups/{group_id}/users/{user_id}.{format}':
+    delete:
+      tags:
+        - Groups
+      summary: DELETE
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Groups#DELETE-2'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/group_id'
+        - $ref: '#/components/parameters/user_id'
+      responses:
+        '204':
+          description: 'No entity {}'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/custom_fields.{format}':
+    get:
+      tags:
+        - Custom Fields
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_CustomFields#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - custom_fields
+                type: object
+                properties:
+                  custom_fields:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CustomField'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/search.{format}':
+    get:
+      tags:
+        - Search
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Search#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - name: q
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: scope
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+            enum:
+              - all
+              - my_project
+              - subprojects
+        - name: all_words
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: boolean
+        - name: titles_only
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: boolean
+        - name: issues
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+        - name: news
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+        - name: wiki_pages
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+        - name: projects
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+        - name: documents
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+        - name: changesets
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+        - name: messages
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+        - name: open_issues
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+        - name: attachments
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: number
+            oneOf:
+              - type: string
+              - type: integer
+            enum:
+              - 0
+              - 1
+              - only
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - limit
+                  - offset
+                  - results
+                  - total_count
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Search'
+                  total_count:
+                    type: integer
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/projects/{project_id}/files.{format}':
+    get:
+      tags:
+        - Files
+      summary: GET
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Files#GET'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - files
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/File'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+    post:
+      tags:
+        - Files
+      summary: POST
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_Files#POST'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/project_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  required:
+                    - token
+                  type: object
+                  properties:
+                    token:
+                      type: string
+                    version_id:
+                      oneOf:
+                        - type: integer
+                        - type: string
+                    filename:
+                      type: string
+                    description:
+                      type: string
+      responses:
+        '204':
+          description: No entity
+          content:
+            application/json:
+              schema:
+                required:
+                  - file
+                type: object
+                properties:
+                  file:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      version_id:
+                        type: string
+                      filename:
+                        type: string
+                      description:
+                        type: string
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  '/uploads.{format}':
+    post:
+      tags:
+        - Attachments
+      summary: Attaching files
+      externalDocs:
+        url: 'https://www.redmine.org/projects/redmine/wiki/Rest_api#Attaching-files'
+      parameters:
+        - $ref: '#/components/parameters/format'
+        - name: filename
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  upload:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      token:
+                        type: string
+        '406':
+          description: Not acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+components:
+  schemas:
+    IdName:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Issue:
+      required:
+        - author
+        - closed_on
+        - created_on
+        - description
+        - done_ratio
+        - due_date
+        - estimated_hours
+        - id
+        - is_private
+        - priority
+        - project
+        - spent_hours
+        - start_date
+        - status
+        - subject
+        - total_estimated_hours
+        - total_spent_hours
+        - tracker
+        - updated_on
+      type: object
+      properties:
+        id:
+          type: integer
+        project:
+          $ref: '#/components/schemas/IdName'
+        tracker:
+          $ref: '#/components/schemas/IdName'
+        status:
+          $ref: '#/components/schemas/IssueStatus'
+        priority:
+          $ref: '#/components/schemas/IdName'
+        author:
+          $ref: '#/components/schemas/IdName'
+        assigned_to:
+          $ref: '#/components/schemas/IdName'
+        category:
+          $ref: '#/components/schemas/IdName'
+        subject:
+          type: string
+        description:
+          type: string
+          nullable: true
+        start_date:
+          type: string
+          nullable: true
+        due_date:
+          type: string
+          nullable: true
+        done_ratio:
+          type: integer
+        is_private:
+          type: boolean
+        estimated_hours:
+          type: number
+          nullable: true
+        total_estimated_hours:
+          type: number
+          nullable: true
+        spent_hours:
+          type: number
+        total_spent_hours:
+          type: number
+        created_on:
+          type: string
+          format: date-time
+        updated_on:
+          type: string
+          format: date-time
+        closed_on:
+          type: string
+          format: date-time
+          nullable: true
+    IssuePartial:
+      type: object
+      properties:
+        changesets:
+          type: array
+          items:
+            type: string
+        children:
+          type: array
+          items:
+            required:
+              - id
+              - subject
+              - tracker
+            type: object
+            properties:
+              id:
+                type: integer
+              tracker:
+                $ref: '#/components/schemas/IdName'
+              subject:
+                type: string
+        attachments:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/Attachment'
+              - type: object
+                properties:
+                  thumbnail_url:
+                    type: string
+        relations:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              issue_id:
+                type: integer
+              issue_to_id:
+                type: integer
+              relation_type:
+                type: string
+              delay:
+                type: integer
+                nullable: true
+        journals:
+          type: array
+          items:
+            required:
+              - created_on
+              - details
+              - id
+              - notes
+              - private_notes
+              - user
+            type: object
+            properties:
+              id:
+                type: integer
+              user:
+                $ref: '#/components/schemas/IdName'
+              notes:
+                type: string
+              created_on:
+                type: string
+                format: date-time
+              private_notes:
+                type: boolean
+              details:
+                type: array
+                items:
+                  required:
+                    - name
+                    - new_value
+                    - old_value
+                    - property
+                  type: object
+                  properties:
+                    property:
+                      type: string
+                    name:
+                      type: string
+                    old_value:
+                      type: string
+                      nullable: true
+                    new_value:
+                      type: string
+        watchers:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdName'
+        allowed_statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssueStatus'
+    Project:
+      required:
+        - created_on
+        - description
+        - id
+        - identifier
+        - inherit_members
+        - is_public
+        - name
+        - status
+        - updated_on
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: integer
+        identifier:
+          type: integer
+        description:
+          type: integer
+          nullable: true
+        homepage:
+          type: string
+          nullable: true
+        parent_id:
+          type: integer
+        status:
+          type: integer
+        is_public:
+          type: boolean
+        inherit_members:
+          type: boolean
+        trackers:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdName'
+        issue_categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdName'
+        enabled_modules:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdName'
+        created_on:
+          type: string
+          format: date-time
+        updated_on:
+          type: string
+          format: date-time
+    User:
+      required:
+        - admin
+        - created_on
+        - firstname
+        - id
+        - last_login_on
+        - lastname
+        - login
+        - mail
+        - passwd_changed_on
+        - twofa_scheme
+        - updated_on
+      type: object
+      properties:
+        id:
+          type: integer
+        login:
+          type: string
+        admin:
+          type: boolean
+        firstname:
+          type: string
+        lastname:
+          type: string
+        mail:
+          type: string
+        created_on:
+          type: string
+          format: date-time
+        updated_on:
+          type: string
+          format: date-time
+        last_login_on:
+          type: string
+          format: date-time
+          nullable: true
+        passwd_changed_on:
+          type: string
+          format: date-time
+          nullable: true
+        twofa_scheme:
+          type: object
+          nullable: true
+    UserPartial:
+      required:
+        - api_key
+        - status
+      type: object
+      properties:
+        api_key:
+          type: string
+        status:
+          type: integer
+    Membersip:
+      oneOf:
+        - required:
+            - id
+            - project
+            - roles
+            - user
+          type: object
+          properties:
+            id:
+              type: integer
+            project:
+              $ref: '#/components/schemas/IdName'
+            user:
+              $ref: '#/components/schemas/IdName'
+            roles:
+              type: array
+              items:
+                $ref: '#/components/schemas/IdName'
+        - required:
+            - group
+            - id
+            - project
+            - roles
+          type: object
+          properties:
+            id:
+              type: integer
+            project:
+              $ref: '#/components/schemas/IdName'
+            group:
+              $ref: '#/components/schemas/IdName'
+            roles:
+              type: array
+              items:
+                $ref: '#/components/schemas/IdName'
+    TimeEntry:
+      required:
+        - activity
+        - comments
+        - created_on
+        - hours
+        - id
+        - issue
+        - project
+        - spent_on
+        - updated_on
+        - user
+      type: object
+      properties:
+        id:
+          type: integer
+        project:
+          $ref: '#/components/schemas/IdName'
+        issue:
+          type: object
+          properties:
+            id:
+              type: integer
+        user:
+          $ref: '#/components/schemas/IdName'
+        activity:
+          $ref: '#/components/schemas/IdName'
+        hours:
+          type: number
+        comments:
+          type: string
+        spent_on:
+          type: string
+          format: date
+        created_on:
+          type: string
+          format: date-time
+        updated_on:
+          type: string
+          format: date-time
+    News:
+      required:
+        - author
+        - created_on
+        - description
+        - id
+        - project
+        - summary
+        - title
+      type: object
+      properties:
+        id:
+          type: integer
+        project:
+          $ref: '#/components/schemas/IdName'
+        author:
+          $ref: '#/components/schemas/IdName'
+        title:
+          type: string
+        summary:
+          type: string
+        description:
+          type: string
+        created_on:
+          type: string
+          format: date-time
+    IssueRelation:
+      required:
+        - delay
+        - id
+        - issue_id
+        - issue_to_id
+        - relation_type
+      type: object
+      properties:
+        id:
+          type: integer
+        issue_id:
+          type: integer
+        issue_to_id:
+          type: integer
+        relation_type:
+          type: string
+        delay:
+          type: integer
+          nullable: true
+    Version:
+      required:
+        - created_on
+        - description
+        - due_date
+        - id
+        - name
+        - project
+        - sharing
+        - status
+        - updated_on
+        - wiki_page_title
+      type: object
+      properties:
+        id:
+          type: integer
+        project:
+          $ref: '#/components/schemas/IdName'
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+            - open
+            - locked
+            - closed
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        sharing:
+          type: string
+          enum:
+            - none
+            - descendants
+            - hierarchy
+            - tree
+            - system
+        wiki_page_title:
+          type: string
+          nullable: true
+        created_on:
+          type: string
+          format: date-time
+        updated_on:
+          type: string
+          format: date-time
+    WikiPage:
+      required:
+        - author
+        - comments
+        - created_on
+        - text
+        - title
+        - updated_on
+        - version
+      type: object
+      properties:
+        title:
+          type: string
+        parent:
+          required:
+            - title
+          type: object
+          properties:
+            title:
+              type: string
+        text:
+          type: string
+        version:
+          type: integer
+        author:
+          $ref: '#/components/schemas/IdName'
+        comments:
+          type: string
+        created_on:
+          type: string
+          format: date-time
+        updated_on:
+          type: string
+          format: date-time
+    WikiPages:
+      required:
+        - created_on
+        - title
+        - updated_on
+        - version
+      type: object
+      properties:
+        title:
+          type: integer
+        parent:
+          required:
+            - title
+          type: object
+          properties:
+            title:
+              type: string
+        version:
+          type: integer
+        created_on:
+          type: string
+          format: date-time
+        updated_on:
+          type: string
+          format: date-time
+    Query:
+      allOf:
+        - required:
+            - is_public
+            - project_id
+          type: object
+          properties:
+            is_public:
+              type: boolean
+            project_id:
+              type: integer
+              nullable: true
+        - $ref: '#/components/schemas/IdName'
+    IssueStatus:
+      allOf:
+        - $ref: '#/components/schemas/IdName'
+        - required:
+            - is_closed
+          type: object
+          properties:
+            is_closed:
+              type: boolean
+    Attachment:
+      required:
+        - author
+        - content_type
+        - content_url
+        - created_on
+        - description
+        - filename
+        - filesize
+        - id
+      type: object
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        filesize:
+          type: integer
+        content_type:
+          type: string
+        description:
+          type: string
+        content_url:
+          type: string
+        author:
+          $ref: '#/components/schemas/IdName'
+        created_on:
+          type: string
+          format: data-time
+    IssueStatuses:
+      required:
+        - issue_statuses
+      type: object
+      properties:
+        issue_statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssueStatus'
+    Group:
+      $ref: '#/components/schemas/IdName'
+    Tracker:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        default_status:
+          $ref: '#/components/schemas/IdName'
+        description:
+          type: string
+          nullable: true
+        enabled_standard_fields:
+          type: array
+          items:
+            type: string
+    Trackers:
+      required:
+        - trackers
+      type: object
+      properties:
+        trackers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tracker'
+    IssuePriority:
+      allOf:
+        - required:
+            - active
+            - is_default
+          type: object
+          properties:
+            is_default:
+              type: boolean
+            active:
+              type: boolean
+        - $ref: '#/components/schemas/IdName'
+    TimeEntryActivity:
+      allOf:
+        - required:
+            - active
+            - is_default
+          type: object
+          properties:
+            is_default:
+              type: boolean
+            active:
+              type: boolean
+        - $ref: '#/components/schemas/IdName'
+    DocumentCategory:
+      allOf:
+        - required:
+            - active
+            - is_default
+          type: object
+          properties:
+            is_default:
+              type: boolean
+            active:
+              type: boolean
+        - $ref: '#/components/schemas/IdName'
+    IssueCategory:
+      required:
+        - id
+        - name
+        - project
+      type: object
+      properties:
+        id:
+          type: integer
+        project:
+          $ref: '#/components/schemas/IdName'
+        name:
+          type: string
+        assigned_to:
+          $ref: '#/components/schemas/IdName'
+    Role:
+      allOf:
+        - required:
+            - assignable
+            - issue_visibility
+            - permissions
+            - time_entries_visibility
+            - users_visibility
+          type: object
+          properties:
+            assignable:
+              type: boolean
+            issues_visibility:
+              type: string
+            time_entries_visibility:
+              type: string
+            users_visibility:
+              type: string
+            permissions:
+              type: array
+              items:
+                type: string
+        - $ref: '#/components/schemas/IdName'
+    CustomField:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        customized_type:
+          type: string
+          enum:
+            - issue
+            - project
+            - time_entry
+            - version
+            - document
+            - user
+            - group
+            - time_entry_activity
+            - issue_priority
+            - document_category
+        field_format:
+          type: string
+          enum:
+            - enumeration
+            - string
+            - version
+            - attachment
+            - user
+            - list
+            - link
+            - float
+            - int
+            - date
+            - bool
+            - text
+        regexp:
+          type: string
+        min_length:
+          type: integer
+          nullable: true
+        max_length:
+          type: integer
+          nullable: true
+        is_required:
+          type: boolean
+        is_filter:
+          type: boolean
+        searchable:
+          type: boolean
+        multiple:
+          type: boolean
+        default_value:
+          type: string
+          nullable: true
+        visible:
+          type: boolean
+        trackers:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdName'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        possible_values:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+              label:
+                type: string
+    Search:
+      required:
+        - datetime
+        - description
+        - id
+        - title
+        - type
+        - url
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+        url:
+          type: string
+        description:
+          type: string
+        datetime:
+          type: string
+          format: date-time
+    File:
+      required:
+        - author
+        - content_type
+        - content_url
+        - created_on
+        - description
+        - digest
+        - downloads
+        - filename
+        - filesize
+        - id
+      type: object
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        filesize:
+          type: integer
+        content_type:
+          type: string
+        description:
+          type: string
+        content_url:
+          type: string
+        thumbnail_url:
+          type: string
+        author:
+          $ref: '#/components/schemas/IdName'
+        created_on:
+          type: string
+          format: date-time
+        version:
+          $ref: '#/components/schemas/IdName'
+        digest:
+          type: string
+        downloads:
+          type: integer
+    Errors:
+      required:
+        - errors
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+  parameters:
+    format:
+      name: format
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        enum:
+          - json
+          - xml
+    limit:
+      name: limit
+      in: query
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+    offset:
+      name: offset
+      in: query
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+    issue_id:
+      name: issue_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: integer
+    project_id:
+      name: project_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    membership_id:
+      name: membership_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    user_id:
+      name: user_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: integer
+    time_entry_id:
+      name: time_entry_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: integer
+    issue_relation_id:
+      name: issue_relation_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: integer
+    version_id:
+      name: version_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: integer
+    wiki_page_title:
+      name: wiki_page_title
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    attachment_id:
+      name: attachment_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: number
+    issue_category_id:
+      name: issue_category_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: integer
+    role_id:
+      name: role_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: integer
+    group_id:
+      name: group_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: integer
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    ApiKeyAuth:
+      type: apiKey
+      name: X-Redmine-API-Key
+      in: header
+    default:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'https://test.com'
+          scopes: {}
+x-wso2-auth-header: Authorization
+x-wso2-cors:
+  corsConfigurationEnabled: false
+  accessControlAllowOrigins: []
+  accessControlAllowCredentials: false
+  accessControlAllowHeaders: []
+  accessControlAllowMethods: []
+x-wso2-production-endpoints:
+  urls:
+    - 'https://alm-redmine.comune.milano.it/'
+  type: http
+x-wso2-basePath: /ALM/Redmine/4.1.1
+x-wso2-transports:
+  - https
+x-wso2-application-security:
+  security-types:
+    - oauth2
+  optional: false
+x-wso2-response-cache:
+  enabled: false
+  cacheTimeoutInSeconds: 300
